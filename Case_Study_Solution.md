@@ -1,4 +1,4 @@
-Q1. Total Amount Spent by Each Customer
+## Q1. Total Amount Spent by Each Customer
 ``` SQL
 SELECT 
     sales.customer_id,
@@ -7,35 +7,33 @@ FROM sales
 JOIN menu
     ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id;
-``
+```
+<img width="626" height="258" alt="image" src="https://github.com/user-attachments/assets/813598ba-c919-4279-80f7-d386c70db385" />
 
-Analysis:
+### Analysis:
 
-Customer A generated the highest total revenue ($76), closely followed by Customer B ($74), indicating similar overall spending value.
+- Customer A generated the highest total revenue ($76), closely followed by Customer B ($74), indicating similar overall spending value.
+- Customer C spent significantly less ($36), suggesting fewer visits or lower-value purchases.
+- This spending gap highlights a segmentation opportunity where Customer C could be targeted with loyalty incentives to increase average spend.
 
-Customer C spent significantly less ($36), suggesting fewer visits or lower-value purchases.
-
-This spending gap highlights a segmentation opportunity where Customer C could be targeted with loyalty incentives to increase average spend.
-
-Q2. Number of Days Each Customer Visited the Restaurant
+## Q2. Number of Days Each Customer Visited the Restaurant
 ``` SQL
-
 SELECT 
     customer_id,
     COUNT(DISTINCT order_date) AS total_visits
 FROM sales
 GROUP BY customer_id
 ORDER BY customer_id;
-``
-Analysis:
+```
+<img width="264" height="114" alt="image" src="https://github.com/user-attachments/assets/7f053d69-8996-4bdc-b23d-69b7addf5a49" />
 
-Customer B is the most frequent visitor, with visits across six different days, indicating higher engagement.
+### Analysis:
+- Customer B is the most frequent visitor, with visits across six different days, indicating higher engagement.
+- Customer A shows moderate visit frequency.
+- Customer C has the lowest engagement, visiting only twice, suggesting potential for visit-frequency promotions.
 
-Customer A shows moderate visit frequency.
-
-Customer C has the lowest engagement, visiting only twice, suggesting potential for visit-frequency promotions.
-
-Q3. First Item Purchased by Each Customer
+## Q3. First Item Purchased by Each Customer
+```sql
 WITH first_visit AS (
     SELECT 
         customer_id,
@@ -54,16 +52,16 @@ JOIN first_visit f
 JOIN menu m
     ON s.product_id = m.product_id
 ORDER BY s.customer_id;
+```
+<img width="397" height="164" alt="image" src="https://github.com/user-attachments/assets/71623bdf-b3ec-4a37-bce7-3da511ecec76" />
 
-Analysis:
+### Analysis:
+- All customers made their first purchase on 1 January 2021.
+- Multiple items were purchased on the first visit by each customer.
+- This indicates strong opening-day engagement and suggests the first purchase should be treated as a basket of items, not a   single product.
 
-All customers made their first purchase on 1 January 2021.
-
-Multiple items were purchased on the first visit by each customer.
-
-This indicates strong opening-day engagement and suggests the first purchase should be treated as a basket of items, not a single product.
-
-Q4. Most Purchased Item on the Menu
+### Q4. Most Purchased Item on the Menu
+```sql
 SELECT 
     menu.product_name,
     COUNT(*) AS total_purchases
@@ -73,16 +71,16 @@ JOIN menu
 GROUP BY menu.product_name
 ORDER BY total_purchases DESC
 LIMIT 1;
+```
+<img width="328" height="57" alt="image" src="https://github.com/user-attachments/assets/c57e5000-1d77-4ef8-99d9-203361896463" />
 
-Analysis:
+### Analysis:
+- Ramen is the most frequently purchased item with 8 total purchases.
+- This indicates a strong customer preference and positions ramen as a key revenue-driving product.
+- The item could be prioritized in promotions or bundled offers.
 
-Ramen is the most frequently purchased item with 8 total purchases.
-
-This indicates a strong customer preference and positions ramen as a key revenue-driving product.
-
-The item could be prioritized in promotions or bundled offers.
-
-Q5. Most Popular Item for Each Customer
+## Q5. Most Popular Item for Each Customer
+```sql
 WITH customer_item_counts AS (
     SELECT 
         sales.customer_id,
@@ -111,16 +109,16 @@ SELECT
 FROM ranked_items
 WHERE item_rank = 1
 ORDER BY customer_id;
+```
+<img width="439" height="164" alt="image" src="https://github.com/user-attachments/assets/a66d98d5-775f-43c8-8043-0a5999bcb7a9" />
 
-Analysis:
+### Analysis:
+- Ramen is the most frequently purchased item for Customers A and C.
+- Customer B purchased all menu items equally, indicating no dominant preference.
+- This supports personalized promotions: ramen-focused offers for A and C, and variety bundles for B.
 
-Ramen is the most frequently purchased item for Customers A and C.
-
-Customer B purchased all menu items equally, indicating no dominant preference.
-
-This supports personalized promotions: ramen-focused offers for A and C, and variety bundles for B.
-
-Q6. First Item Purchased After Becoming a Member
+## Q6. First Item Purchased After Becoming a Member
+```sql
 SELECT 
     customer_id,
     product_name,
@@ -142,16 +140,16 @@ FROM (
     WHERE s.order_date >= mem.join_date
 ) t
 WHERE rn = 1;
+```
+<img width="626" height="128" alt="image" src="https://github.com/user-attachments/assets/c06ed99d-3816-4a8d-860a-0777c4918b36" />
 
-Analysis:
+### Analysis:
+- Customer A’s first post-membership purchase was ramen.
+- Customer B’s first post-membership purchase was sushi.
+- Customers continued buying familiar items after joining, suggesting membership did not immediately change preferences.
 
-Customer A’s first post-membership purchase was ramen.
-
-Customer B’s first post-membership purchase was sushi.
-
-Customers continued buying familiar items after joining, suggesting membership did not immediately change preferences.
-
-Q7. Item Purchased Just Before Becoming a Member
+## Q7. Item Purchased Just Before Becoming a Member
+```sql
 SELECT 
     customer_id,
     product_name,
@@ -174,16 +172,16 @@ FROM (
 ) ranked_orders
 WHERE rn = 1
 ORDER BY customer_id;
+```
+<img width="404" height="85" alt="image" src="https://github.com/user-attachments/assets/a35a75d4-da23-4579-970a-b859ae826beb" />
 
-Analysis:
+### Analysis:
+- Customer A last purchased sushi before joining.
+- Customer B last purchased curry before joining.
+- Customers were actively engaged prior to enrollment, indicating strong pre-membership brand interaction.
 
-Customer A last purchased sushi before joining.
-
-Customer B last purchased curry before joining.
-
-Customers were actively engaged prior to enrollment, indicating strong pre-membership brand interaction.
-
-Q8. Total Amount Spent Before Becoming a Member
+## Q8. Total Amount Spent Before Becoming a Member
+```sql
 SELECT 
     sales.customer_id, 
     SUM(menu.price) AS total_spend
@@ -195,16 +193,16 @@ JOIN members
 WHERE sales.order_date < members.join_date
 GROUP BY sales.customer_id
 ORDER BY customer_id;
+```
+<img width="436" height="128" alt="image" src="https://github.com/user-attachments/assets/a653aac2-f958-4c48-8a72-a7269382c80c" />
 
-Analysis:
+### Analysis:
+- Customer B spent more than double Customer A before joining the program.
+- This indicates Customer B was already a high-value customer pre-membership.
+- Customer A’s value appears to have grown more gradually over time.
 
-Customer B spent more than double Customer A before joining the program.
-
-This indicates Customer B was already a high-value customer pre-membership.
-
-Customer A’s value appears to have grown more gradually over time.
-
-Q9. Loyalty Points Earned with Sushi 2× Multiplier
+## Q9. Loyalty Points Earned with Sushi 2× Multiplier
+```sql
 SELECT 
     sales.customer_id,
     SUM(
@@ -218,16 +216,16 @@ JOIN menu
     ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
+```
+<img width="273" height="114" alt="image" src="https://github.com/user-attachments/assets/b98cb647-b3c8-4555-975e-854ef270865b" />
 
-Analysis:
+### Analysis:
+- Customer B earned the highest points despite not having the highest spend.
+- Sushi’s 2× multiplier significantly impacts total points accumulation.
+- This demonstrates how incentive design can shift reward outcomes beyond pure spending.
 
-Customer B earned the highest points despite not having the highest spend.
-
-Sushi’s 2× multiplier significantly impacts total points accumulation.
-
-This demonstrates how incentive design can shift reward outcomes beyond pure spending.
-
-Q10. Loyalty Points After First-Week Double Points Promotion
+## Q10. Loyalty Points After First-Week Double Points Promotion
+```sql
 SELECT
     sales.customer_id,
     SUM(
@@ -248,16 +246,16 @@ JOIN members
 WHERE sales.order_date < '2021-02-01'
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
+```
+<img width="270" height="85" alt="image" src="https://github.com/user-attachments/assets/689923b6-79b4-4183-8c16-be1aa6997c41" />
 
-Analysis:
+### Analysis:
+- Customer B accumulated more points (940) than Customer A (860) by the end of January.
+- Timing of purchases during the promotional window played a critical role.
+- Points outcomes are influenced by both purchase timing and product mix.
 
-Customer B accumulated more points (940) than Customer A (860) by the end of January.
-
-Timing of purchases during the promotional window played a critical role.
-
-Points outcomes are influenced by both purchase timing and product mix.
-
-Q11. Detailed Transaction Dataset with Membership Status and Ranking
+## Q11. Detailed Transaction Dataset with Membership Status and Ranking
+```sql
 SELECT
     sales.customer_id,
     sales.order_date,
@@ -286,14 +284,13 @@ LEFT JOIN members
 WHERE members.join_date IS NULL
    OR sales.order_date >= members.join_date
 ORDER BY sales.customer_id, sales.order_date;
+```
+<img width="813" height="275" alt="image" src="https://github.com/user-attachments/assets/e05be14d-50cc-4c00-a8c5-25dc77880388" />
 
-Analysis:
-
-The dataset integrates transaction data, product details, and membership status.
-
-Purchase ranking captures chronological behavior after membership enrollment.
-
-This structure enables advanced analysis of customer retention, repeat behavior, and loyalty program effectiveness.
+### Analysis:
+- The dataset integrates transaction data, product details, and membership status.
+- Purchase ranking captures chronological behavior after membership enrollment.
+- This structure enables advanced analysis of customer retention, repeat behavior, and loyalty program effectiveness.
 
 
 
